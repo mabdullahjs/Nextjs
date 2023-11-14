@@ -5,8 +5,8 @@ import Link from 'next/link'
 const Page = () => {
   return (
     <>
-    <h1>Hello world</h1>
-    <Link href='contact'>contact</Link>
+    <h1>Hello</h1>
+    <Link href='contact'>contact</Link><br/>
     <Link href='contact/user'>User</Link>
     </>
 
