@@ -6,7 +6,7 @@ interface Props {
 }
 const DynamicHome = ({params:{id , homeId}}:Props) => {
   return (
-    <div>DynamicHome with id === {id} and dynamic id {homeId}</div>
+    <div>DynamicHome with id === {id} and dynamic ids {homeId}</div>
   )
 }
 
