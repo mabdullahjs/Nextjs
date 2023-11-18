@@ -5,9 +5,7 @@ import Link from 'next/link'
 const Page = () => {
   return (
     <>
-    <h1>Hello</h1>
-    <Link href='contact'>contact</Link><br/>
-    <Link href='contact/user'>User</Link>
+    <h1 className='mt-5'>Hello NextJS</h1>
     </>
 
   )
