@@ -1,39 +1,59 @@
 import { NextRequest, NextResponse } from "next/server";
 import schema from "../schema";
+import Contact from "@/models/contact";
+import mongoose from "mongoose";
+import dbConn from "@/utils/dbConn";
 
 interface Props {
     params: { id: number }
 }
-export function GET(request: NextRequest, { params: { id } }: Props) {
 
-    if (id > 10) {
-        return NextResponse.json({ error: 'error occured' }, { status: 404 });
-    } else {
-        return NextResponse.json({
-            id: 1,
-            name: 'abdullah'
-        });
+// get single contact from DB
+export async function GET(request: NextRequest, { params: { id } }: Props) {
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return NextResponse.json({ error: 'No such contact' }, { status: 404 });
     }
+    const contact = await Contact.findById(id);
+    return NextResponse.json(contact, { status: 200 });
+
 }
 
+// update contact from DB
 export async function PUT(request: NextRequest, { params: { id } }: Props) {
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return NextResponse.json({ error: 'No such contact' }, { status: 404 });
+    }
     const body = await request.json();
     const validation = schema.safeParse(body);
-    if (id > 10) {
-        return NextResponse.json({ error: 'User not found' }, { status: 401 });
-    } else if (!validation.success) {
-        return NextResponse.json(validation.error.errors, { status: 400 });
+    if (!validation.success) {
+        return NextResponse.json(validation.error.errors, { status: 401 });
     }
-    return NextResponse.json({
-        id: 1,
-        name: 'abdullah'
-    });
+    await dbConn();
+    const contact = await Contact.findOneAndUpdate(
+        { _id: id },
+        {
+            ...body,
+        }
+    );
+    if (!contact) {
+        return NextResponse.json({ error: "No such Contact" });
+    }
+    return NextResponse.json(contact, { status: 201 });
 }
 
+
+// delete contact from DB
 export async function DELETE(request: NextRequest, { params: { id } }: Props) {
-    const body = await request.json();
-    if (id > 10) {
-        return NextResponse.json({ error: 'User not found' }, { status: 401 });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return NextResponse.json({ error: 'No such contact' }, { status: 404 });
     }
-    return NextResponse.json({ message: 'user deleted succesfully' });
+    const contact = await Contact.findOneAndDelete({ _id: id });
+
+    if (!contact) {
+        return NextResponse.json({ error: "No such contact" });
+    }
+
+    return NextResponse.json({ message: 'contact deleted succesfully' });
 }

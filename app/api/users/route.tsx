@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import schema from "./schema";
+import dbConn from "@/utils/dbConn";
+import Contact from "@/models/contact";
 
-export function GET(request: NextRequest) {
-    return NextResponse.json([
-        { id: 1, name: 'abdullah' },
-        { id: 2, name: 'usman' },
-    ])
+
+
+export async function GET(request: NextRequest) {
+    await dbConn();
+    const contact = await Contact.find({});
+    return NextResponse.json(contact)
 }
 
 export async function POST(request: NextRequest) {
@@ -14,9 +17,10 @@ export async function POST(request: NextRequest) {
     if (!validation.success) {
         return NextResponse.json(validation.error.errors, { status: 401 });
     } else {
+        await dbConn();
+        await Contact.create(body);
         return NextResponse.json({
-            id: 1,
-            name: body.name
+            message: 'course added succesfully'
         }, { status: 201 });
     }
 }
