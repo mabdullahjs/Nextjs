@@ -19,6 +19,9 @@ const Navbar = () => {
                         <li>
                             <Link href='/contact/user/singleuser'>Single User</Link>
                         </li>
+                        <li>
+                            <Link href='/upload'>Upload Page</Link>
+                        </li>
                     </ul>
                 </div>
             </div>
