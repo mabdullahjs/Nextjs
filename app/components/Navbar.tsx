@@ -1,7 +1,10 @@
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import React from 'react'
+import { authOptions } from '../api/auth/[...nextauth]/route'
 
-const Navbar = () => {
+const Navbar = async () => {
+    const session = await getServerSession(authOptions);
     return (
         <>
             <div className="navbar bg-base-100">
@@ -22,6 +25,13 @@ const Navbar = () => {
                         <li>
                             <Link href='/upload'>Upload Page</Link>
                         </li>
+                        <li>
+                            {!session && <Link href='/api/auth/signin'>login</Link>}
+                            {session && <div>{session.user!.name}</div>}
+                        </li>
+                        {session && <li>
+                            <Link href='/api/auth/signout'>Logout</Link>
+                        </li>}
                     </ul>
                 </div>
             </div>
